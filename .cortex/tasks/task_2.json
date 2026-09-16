@@ -1,0 +1,9 @@
+{
+  "id": 2,
+  "subject": "\u7f16\u5199 app \u6a21\u5757\u6784\u5efa\u914d\u7f6e\u4e0e Manifest",
+  "description": "app/build.gradle.kts\u3001proguard-rules.pro\u3001AndroidManifest.xml\uff08SplashActivity \u4e3a\u5165\u53e3\uff0c\u8df3\u8f6c DashboardActivity\uff09",
+  "status": "completed",
+  "owner": null,
+  "blockedBy": [],
+  "blocks": []
+}
