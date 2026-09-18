@@ -36,4 +36,10 @@ dependencies {
     implementation("com.google.android.material:material:1.5.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.3")
     implementation("androidx.core:core-splashscreen:1.0.0")
+    implementation("androidx.exifinterface:exifinterface:1.3.7") // takePhoto EXIF 旋转转正
+    implementation("androidx.recyclerview:recyclerview:1.2.1") // 九宫格
+
+    testImplementation("junit:junit:4.13.2")
+    // 本地单测里 org.json 是 android.jar 桩（抛 Stub!），引入真实实现供 JVM 测试
+    testImplementation("org.json:json:20220320")
 }

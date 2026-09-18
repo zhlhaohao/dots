@@ -1,0 +1,106 @@
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type">
+    <script src='jsbridge.js'></script>
+    <title>JSBridge 接口测试（sample 移植版）</title>
+    <style>
+        body { font-family: sans-serif; margin: 16px; }
+        input[type=button] { width: 100%; padding: 12px; margin: 4px 0; font-size: 16px; }
+        #show { white-space: pre-wrap; word-break: break-all; background: #f0f0f0; padding: 8px; }
+    </style>
+</head>
+
+<body>
+<p>本页演示 sample App 移植的 JSBridge 框架（3 个示范接口）：</p>
+<p>
+    <input type="button" value="获取屏幕信息(同步)" onclick="doGetScreenInfo();"/>
+</p>
+<p>
+    <input type="button" value="获取用户信息(异步)" onclick="doGetUserInfo();"/>
+</p>
+<p>
+    <input type="button" value="关闭本页面(同步)" onclick="doCloseHtmlPage();"/>
+</p>
+<p>
+    <input type="button" value="调用不存在的接口(异步,fail兜底)" onclick="doCallMissing();"/>
+</p>
+<p>
+    <input type="button" value="禁止返回键关页(canGoBack=false)" onclick="doForbidClose();"/>
+</p>
+<p>
+    <input type="button" value="恢复返回键关页(canGoBack=true)" onclick="doAllowClose();"/>
+</p>
+<p>
+    <input type="button" value="拍照(异步,base64回传)" onclick="doTakePhoto();"/>
+</p>
+<p>
+    <img id="photoPreview" style="max-width:100%;display:none;"/>
+</p>
+<xmp id="show">（回调结果显示在这里）</xmp>
+</body>
+<script>
+
+    function show(text) {
+        document.getElementById("show").textContent = text;
+    }
+
+    // 同步通道：返回 string，需手动 JSON.parse
+    function doGetScreenInfo() {
+        var raw = jsbridge.getScreenInfo();
+        var info = JSON.parse(raw);
+        show("getScreenInfo (sync): " + raw);
+    }
+
+    // 异步通道：success / fail / cancel 四态回调
+    function doGetUserInfo() {
+        jsbridge.getUserInfo({
+            success: function (res) { show("getUserInfo success: " + JSON.stringify(res)); },
+            fail:    function (res) { show("getUserInfo fail: " + JSON.stringify(res)); }
+        });
+    }
+
+    // 同步通道：原生 finish 当前页面
+    function doCloseHtmlPage() {
+        var raw = jsbridge.closeHtmlPage();
+        show("closeHtmlPage (sync): " + raw);
+    }
+
+    // 未注册的函数名 → 原生 dispatchJSRequest 找不到插件 → 回调 fail（框架兜底验证）
+    function doCallMissing() {
+        jsbridge.sendToNative("notRegisteredFunc", {}, {
+            success: function (res) { show("unexpected success"); },
+            fail:    function (res) { show("notRegisteredFunc → fail 兜底 OK"); }
+        });
+    }
+
+    // canGoBack=false 后按物理返回键：页面不关闭，触发 success 回调
+    function doForbidClose() {
+        jsbridge.canGoBack(false, function (res) {
+            show("返回键被拦截, 页面收到 success 回调: result=" + res.result);
+        });
+        show("canGoBack=false 已设置，按返回键试试");
+    }
+
+    function doAllowClose() {
+        jsbridge.canGoBack(true);
+        show("canGoBack=true 已设置，返回键恢复关页");
+    }
+
+    // 拍照：success 回调 base64（纯 base64 无前缀），拼 dataURL 前缀预览
+    function doTakePhoto() {
+        jsbridge.takePhoto({
+            success: function (res) {
+                show("takePhoto success: size=" + res.size + "B, " + res.width + "x" + res.height
+                    + ", base64len=" + res.base64.length);
+                var img = document.getElementById("photoPreview");
+                img.src = "data:image/jpeg;base64," + res.base64;
+                img.style.display = "";
+            },
+            fail:   function (res) { show("takePhoto fail: " + JSON.stringify(res)); },
+            cancel: function (res) { show("已取消拍照: " + JSON.stringify(res)); }
+        });
+    }
+
+</script>
+
+</html>
