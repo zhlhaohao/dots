@@ -11,4 +11,8 @@
     <string name="grid_edit_title_hint">标题</string>
     <string name="grid_edit_url_hint">URL（留空且标题留空 = 空格子）</string>
     <string name="grid_edit_url_invalid">URL 需以 http://、https:// 或 file:// 开头且不含空格</string>
+    <string name="grid_edit_restore">恢复默认…</string>
+    <string name="grid_restore_confirm_title">恢复默认？</string>
+    <string name="grid_restore_confirm_message">九宫格将回到随包内置的出厂布局，你对全部 9 个格子的修改（含排序）都会被清除。此操作不可撤销。</string>
+    <string name="grid_restore_confirm_yes">恢复</string>
 </resources>

@@ -42,10 +42,22 @@ class DashboardActivity : AppCompatActivity() {
     private fun showEditDialog(position: Int) {
         if (position == androidx.recyclerview.widget.RecyclerView.NO_POSITION) return
         val current = gridItems.getOrNull(position) ?: return
-        GridCellEditDialog.show(this, current) { updated ->
-            gridItems = gridItems.toMutableList().also { it[position] = updated }
-            configStore.save(gridItems)
-            gridAdapter.submit(gridItems)
-        }
+        GridCellEditDialog.show(
+            activity = this,
+            item = current,
+            onSave = { updated ->
+                gridItems = gridItems.toMutableList().also { it[position] = updated }
+                configStore.save(gridItems)
+                gridAdapter.submit(gridItems)
+            },
+            onRestoreDefaults = { restoreDefaults() }
+        )
+    }
+
+    /** 一键恢复默认：回写出厂配置并立即刷新（工单03）。 */
+    private fun restoreDefaults() {
+        gridItems = configStore.factoryConfig()
+        configStore.save(gridItems)
+        gridAdapter.submit(gridItems)
     }
 }
