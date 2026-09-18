@@ -5,6 +5,8 @@
 .DS_Store
 /build
 /captures
+/app/build
+/.planify
 .externalNativeBuild
 .cxx
 local.properties

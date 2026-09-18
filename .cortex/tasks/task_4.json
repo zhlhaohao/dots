@@ -1,9 +1,0 @@
-{
-  "id": 4,
-  "subject": "\u8fd0\u884c assembleDebug \u6784\u5efa\u9a8c\u8bc1\u5e76\u4fee\u590d\u95ee\u9898",
-  "description": "\u7528 Android Studio JRE 11 + gradlew \u6267\u884c assembleDebug\uff0c\u4fee\u590d\u62a5\u9519\u76f4\u81f3\u6784\u5efa\u6210\u529f",
-  "status": "completed",
-  "owner": null,
-  "blockedBy": [],
-  "blocks": []
-}

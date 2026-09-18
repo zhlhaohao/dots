@@ -1,9 +1,0 @@
-{
-  "id": 1,
-  "subject": "\u642d\u5efa Gradle \u9879\u76ee\u9aa8\u67b6\uff08settings/build/gradle.properties/wrapper\uff09",
-  "description": "\u521b\u5efa settings.gradle.kts\u3001\u6839 build.gradle.kts\u3001gradle.properties\u3001gradle wrapper",
-  "status": "completed",
-  "owner": null,
-  "blockedBy": [],
-  "blocks": []
-}
