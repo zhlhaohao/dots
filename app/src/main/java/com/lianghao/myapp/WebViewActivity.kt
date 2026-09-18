@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.result.ActivityResult
@@ -38,6 +39,9 @@ class WebViewActivity : AppCompatActivity(), WebViewHost {
     companion object {
         const val EXTRA_URL = "extra_url"
         const val DEMO_PAGE_URL = "file:///android_asset/webpage/jsbridge_demo.html"
+
+        /** WebView 可自行加载的网页协议；其余 scheme 视为外部 App 协议 */
+        private val WEB_SCHEMES = setOf("http", "https", "file", "about", "blob", "data")
 
         fun start(context: android.content.Context, url: String? = null) {
             val intent = Intent(context, WebViewActivity::class.java)
@@ -108,7 +112,28 @@ class WebViewActivity : AppCompatActivity(), WebViewHost {
         // 追加容器标识，H5 通过 UA 里的 NexBox/x.y 感知运行环境（与 news 侧约定一致）
         settings.userAgentString = settings.userAgentString + HybridConstant.HYBRID_UA_FLAG
 
-        webView.webViewClient = WebViewClient()
+        webView.webViewClient = object : WebViewClient() {
+            /**
+             * 拦截非网页协议导航（如 m 站跳 App 的私有 scheme snssdk143://）。
+             * 放行 http/https/file/about/blob/data，其余尝试唤起外部 App，
+             * 唤不起（无 App 处理）则忽略本次导航，页面留在原地继续渲染。
+             * 不拦截会直接报 ERR_UNKNOWN_URL_SCHEME 并用错误页覆盖已加载内容。
+             */
+            override fun shouldOverrideUrlLoading(
+                view: WebView,
+                request: WebResourceRequest
+            ): Boolean {
+                val url = request.url
+                val scheme = url.scheme?.lowercase() ?: return false
+                if (scheme in WEB_SCHEMES) return false // 网页协议：交 WebView 正常加载
+                return try {
+                    startActivity(Intent(Intent.ACTION_VIEW, url)) // 私有 scheme：尝试唤起对应 App
+                    true
+                } catch (e: android.content.ActivityNotFoundException) {
+                    true // 无 App 可处理：吞掉导航，保留当前页面
+                }
+            }
+        }
         webView.webChromeClient = WebChromeClient()
     }
 
