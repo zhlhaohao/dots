@@ -15,8 +15,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/bg_grid_cell">
+        android:padding="12dp">
 
         <TextView
             android:id="@+id/tvBadge"
