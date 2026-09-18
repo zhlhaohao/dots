@@ -10,10 +10,12 @@ import com.lianghao.myapp.R
 
 /**
  * 九宫格适配器：非空格子 = 首字母色块 + 标题；空格子 = 灰显占位、不响应单击。
+ * 长按任意格子（含空格子）触发 onCellLongClick（格子编辑入口）。
  */
 class GridAdapter(
     private var items: List<GridItem>,
-    private val onCellClick: (GridItem) -> Unit
+    private val onCellClick: (GridItem) -> Unit,
+    private val onCellLongClick: (Int) -> Unit = {}
 ) : RecyclerView.Adapter<GridAdapter.CellViewHolder>() {
 
     /** 按位置取色调色板，空格子不消费（灰显）。 */
@@ -37,6 +39,10 @@ class GridAdapter(
 
     override fun onBindViewHolder(holder: CellViewHolder, position: Int) {
         val item = items[position]
+        holder.itemView.setOnLongClickListener {
+            onCellLongClick(holder.bindingAdapterPosition)
+            true
+        }
         if (item.isEmpty) {
             holder.bindEmpty()
             holder.itemView.setOnClickListener(null)

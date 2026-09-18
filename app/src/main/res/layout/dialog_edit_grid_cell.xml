@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp"
+    android:paddingTop="16dp">
+
+    <EditText
+        android:id="@+id/etCellTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/grid_edit_title_hint"
+        android:inputType="text"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/etCellUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/grid_edit_url_hint"
+        android:inputType="textUri"
+        android:maxLines="1" />
+
+    <TextView
+        android:id="@+id/tvUrlError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="#D32F2F"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:text="@string/grid_edit_url_invalid" />
+
+</LinearLayout>
