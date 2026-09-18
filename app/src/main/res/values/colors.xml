@@ -7,4 +7,15 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="splash_background">#FF3700B3</color>
+
+    <!-- 九宫格色板：按格子位置循环取色 -->
+    <color name="grid_c0">#E53935</color>
+    <color name="grid_c1">#D81B60</color>
+    <color name="grid_c2">#8E24AA</color>
+    <color name="grid_c3">#3949AB</color>
+    <color name="grid_c4">#1E88E5</color>
+    <color name="grid_c5">#00897B</color>
+    <color name="grid_c6">#43A047</color>
+    <color name="grid_c7">#F4511E</color>
+    <color name="grid_c8">#6D4C41</color>
 </resources>

@@ -3,4 +3,6 @@
     <string name="app_name">MyApp</string>
     <string name="dashboard_title">Dashboard</string>
     <string name="welcome_text">欢迎访问</string>
+    <string name="open_jsbridge_demo">打开 JSBridge 演示页</string>
+    <string name="webview_title">JSBridge Demo</string>
 </resources>
