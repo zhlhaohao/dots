@@ -91,7 +91,8 @@ class GridAdapter(
             clickItem = item
             badge.visibility = View.VISIBLE
             badge.text = item.badgeChar?.toString()
-            badge.setBackgroundColor(color)
+            // 圆形色块：oval 背景 + tint 上色（setBackgroundColor 会顶掉 shape 圆形）
+            badge.background.setTint(color)
             title.text = item.title
             body.alpha = 1f
         }
