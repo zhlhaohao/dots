@@ -132,6 +132,7 @@ class GridAdapter(
 
             override fun onTouch(v: View, event: MotionEvent): Boolean {
                 detector.onTouchEvent(event)
+                var consume = false
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
                         longPressed = false
@@ -149,6 +150,8 @@ class GridAdapter(
                     }
                     MotionEvent.ACTION_UP -> {
                         if (longPressed && !dragStarted) holder.edit()
+                        // 长按已发生：必须消费 UP，否则系统补发 click 会打开 URL 盖住编辑框
+                        consume = longPressed || dragStarted
                         longPressed = false
                         dragStarted = false
                     }
@@ -157,7 +160,7 @@ class GridAdapter(
                         dragStarted = false
                     }
                 }
-                return longPressed || dragStarted
+                return consume || longPressed || dragStarted
             }
         }
     }

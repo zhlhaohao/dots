@@ -6,7 +6,8 @@
 
 - `app/src/main/java/com/lianghao/myapp/`
   - `SplashActivity.kt` — LAUNCHER 入口，`core-splashscreen` 兼容库，1.2s 后跳转 Dashboard
-  - `DashboardActivity.kt` — 加载 `activity_dashboard.xml`，居中显示 `@string/welcome_text`，含 JSBridge 演示页入口按钮
+  - `DashboardActivity.kt` — 九宫格启动台（3×3，见 docs/adr/0002 与下文「九宫格」节）：单击开格、长按静止松手弹「格子编辑」、长按拖动排序；配置经 `grid/GridConfigStore` 读写
+  - `grid/` — 九宫格支持包：`GridItem`（格子条目，空=灰显占位）/`GridConfigJson`（纯编解码，损坏返回 null）/`GridConfigStore`（filesDir 用户配置 + assets 出厂配置，首启拷贝落盘）/`GridAdapter`（自管手势状态机 + ItemTouchHelper）/`GridCellEditDialog`（编辑+恢复默认入口）
   - `WebViewActivity.kt` — JSBridge 宿主：系统 WebView + 注册插件 + 加载 URL（缺省加载内置演示页）
 - `app/src/main/java/com/lianghao/myapp/jsbridge/` — JSBridge 核心框架（Java，自 ../news 的 com.tencent.tbs.jsbridge 移植，WebView 由 X5 改为系统 android.webkit.WebView，宿主依赖抽象为 `WebViewHost` 接口）
   - `JSBridge.java`（分发器，注入对象名 `Android`）/ `BaseJSPlugin.java`（异步基类）/ `BaseJSPluginSync.java`（同步基类）/ `JSCallbackType.java`（四态）/ `HybridConstant.java` / `WebViewHost.java`（宿主接口：含 `startPluginActivityForResult`/`requestRuntimePermissions`，为本仓新增）
@@ -86,3 +87,18 @@ $SDK/platform-tools/adb.exe logcat -d -s JsTakePhoto:V
 ```
 
 已验证：权限弹窗→相机拉起→拍照→success 回调→页面 `#show` 显示 `takePhoto success: size=15749B, 960x1280, base64len=21000`→`<img id="photoPreview">` dataURL 渲染出照片（截屏比对 virtualscene 场景结构一致）。照片落盘 `cache/jsbridge_photo/photo_<ts>.jpg`。环境坑：①模拟器 `com.android.camera2` 自身偶发 ANR（Input dispatching timed out，virtualscene 保存慢），force-stop 后重跑即恢复，与插件无关；②演示页照片预览在按钮列表下方，验证渲染需滚动到页底。
+
+### 九宫格 Dashboard 装机验证（已实测通过 2026-09-18，工单01–05）
+
+```bash
+$SDK/platform-tools/adb.exe install -r app/build/outputs/apk/debug/app-debug.apk
+$SDK/platform-tools/adb.exe shell am start -n com.lianghao.myapp/.SplashActivity
+# 单击格1 → WebViewActivity；长按静止松手 → 编辑框；input draganddrop 起拖排序；恢复默认 → 二次确认
+MSYS_NO_PATHCONV=1 $SDK/platform-tools/adb.exe shell "run-as com.lianghao.myapp cat files/grid_items.json"
+# 重装恢复实测：
+$ADB shell bmgr transport com.android.localtransport/.LocalTransport   # GMS transport 未登录会 Transport error
+$ADB shell bmgr backupnow com.lianghao.myapp && $ADB uninstall com.lianghao.myapp && $ADB install app/build/outputs/apk/debug/app-debug.apk
+# 期望: 重装首启 files/grid_items.json 恢复用户配置（KeepMe 实测通过）
+```
+
+已验证：九宫格渲染（6 实格+3 空格、首字母色块）→ 首启出厂配置落盘 filesDir → 单击开 URL → 长按编辑保存（杀进程重进仍在）→ draganddrop 排序持久化 → 恢复默认（二次确认，UI+落盘回出厂）→ bmgr local transport 备份→卸载→重装→KeepMe 配置自动恢复 → JSBridge 回归（getScreenInfo 1080×2154 / getUserInfo 桥日志正常）。**过程中修 1 个真 bug**：长按弹框泄漏 click（`CellGestureHandler` UP 分支先重置标志后 return false，系统补发 click 打开 WebView 盖住编辑框；修复=UP 先记 `consume` 再重置）。环境坑：①模拟器默认 GMS transport 未登录 → `Transport error`，须 `bmgr transport` 切 local transport；②`bmgr select-transport` 不是合法子命令，用 `bmgr transport WHICH`；③模拟器手势注入用 `input draganddrop x1 y1 x2 y2 3000`（3s 内建长按，恰好触发本仓起拖手势），普通 `input swipe` 时长不足会先触发编辑框。
