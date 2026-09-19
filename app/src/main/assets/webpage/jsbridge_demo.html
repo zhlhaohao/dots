@@ -1,7 +1,28 @@
 <html>
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="content-type">
-    <script src='jsbridge.js'></script>
+    <script src='jsbridge.js'>
+    </script>
+    <script>
+    // 选文件上传：演示用指向内网的接收地址（doclens /api/files/upload）
+    function doPickAndUploadFiles() {
+        jsbridge.pickAndUploadFiles({
+            uploadUrl: "https://10.119.80.105:7862/api/files/upload",
+            destDir: "docs",
+            maxCount: 3,
+            success: function (res) {
+                show("pickAndUploadFiles: " + JSON.stringify(res).substring(0,600));
+                for (var i = 0; i < res.results.length; i++) {
+                    var r = res.results[i];
+                    show("  [" + i + "] " + r.name + " -> " + (r.ok ? r.path : r.code + ": " + r.detail));
+                }
+            },
+            fail:   function (res) { show("pickAndUploadFiles fail: " + JSON.stringify(res)); },
+            cancel: function (res) { show("已取消上传: " + JSON.stringify(res)); }
+        });
+    }
+
+</script>
     <title>JSBridge 接口测试（sample 移植版）</title>
     <style>
         body { font-family: sans-serif; margin: 16px; }
@@ -33,6 +54,7 @@
 <p>
     <input type="button" value="拍照(异步,base64回传)" onclick="doTakePhoto();"/>
         <input type="button" value="相册选图(异步,base64数组回传)" onclick="doPickPhotos();"/>
+        <input type="button" value="选文件上传(multipart,聚合回调)" onclick="doPickAndUploadFiles();"/>
 </p>
 <p>
     <img id="photoPreview" style="max-width:100%;display:none;"/>

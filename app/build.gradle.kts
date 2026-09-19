@@ -38,6 +38,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("androidx.exifinterface:exifinterface:1.3.7") // takePhoto EXIF 旋转转正
     implementation("androidx.recyclerview:recyclerview:1.2.1") // 九宫格
+    implementation("com.squareup.okhttp3:okhttp:4.10.0") // pickAndUploadFiles/downloadFile 网络传输
 
     testImplementation("junit:junit:4.13.2")
     // 本地单测里 org.json 是 android.jar 桩（抛 Stub!），引入真实实现供 JVM 测试

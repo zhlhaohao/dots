@@ -97,6 +97,23 @@
 		});
 	}
 
+
+	//pickAndUploadFiles: multi-pick files, OkHttp multipart upload, aggregate single success callback
+	function pickAndUploadFiles(params) {
+		params = params || {};
+		sendToNative("pickAndUploadFiles", {
+			"uploadUrl":  params.uploadUrl  || "",
+			"destDir":    params.destDir    || "",
+			"overwrite":  params.overwrite  || false,
+			"maxCount":   params.maxCount   || 9,
+			"cookieName": params.cookieName || "cortex_auth"
+		}, {
+			"success": params["success"],
+			"fail":    params["fail"],
+			"cancel":  params["cancel"]
+		});
+	}
+
 	window.jsbridge = {
 		syncSendToNative		: syncSendToNative,
 		sendToNative 			: sendToNative,
@@ -106,7 +123,8 @@
 		closeHtmlPage			: closeHtmlPage,
 		canGoBack				: canGoBack,
 		takePhoto				: takePhoto,
-		pickPhotos				: pickPhotos
+		pickPhotos				: pickPhotos,
+		pickAndUploadFiles		: pickAndUploadFiles
 	};
 
 })();
