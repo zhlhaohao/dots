@@ -32,6 +32,7 @@
 </p>
 <p>
     <input type="button" value="拍照(异步,base64回传)" onclick="doTakePhoto();"/>
+        <input type="button" value="相册选图(异步,base64数组回传)" onclick="doPickPhotos();"/>
 </p>
 <p>
     <img id="photoPreview" style="max-width:100%;display:none;"/>
@@ -98,6 +99,25 @@
             },
             fail:   function (res) { show("takePhoto fail: " + JSON.stringify(res)); },
             cancel: function (res) { show("已取消拍照: " + JSON.stringify(res)); }
+        });
+    }
+
+    // 相册选图：success 回调 photos 数组（压缩后 base64），预览第一张
+    function doPickPhotos() {
+        jsbridge.pickPhotos({
+            maxCount: 3,
+            success: function (res) {
+                show("pickPhotos success: count=" + res.count + "/" + res.pickedCount
+                    + ", truncated=" + res.truncated);
+                var first = res.photos && res.photos[0];
+                if (first && first.base64) {
+                    var img = document.getElementById("photoPreview");
+                    img.src = "data:image/jpeg;base64," + first.base64;
+                    img.style.display = "";
+                }
+            },
+            fail:   function (res) { show("pickPhotos fail: " + JSON.stringify(res)); },
+            cancel: function (res) { show("已取消选图: " + JSON.stringify(res)); }
         });
     }
 

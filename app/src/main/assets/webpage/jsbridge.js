@@ -82,6 +82,21 @@
 		});
 	}
 
+	//异步：拉起系统相册选 1..maxCount 张照片，压缩后 base64 数组一次性回传（契约见 news 仓 docs/pickphotos_bridge.md）
+	function pickPhotos(params) {
+		params = params || {};
+		sendToNative("pickPhotos", {
+			"quality":   params.quality   || 70,
+			"maxWidth":  params.maxWidth  || 1080,
+			"maxHeight": params.maxHeight || 1080,
+			"maxCount":  params.maxCount  || 1
+		}, {
+			"success": params["success"],
+			"fail":    params["fail"],
+			"cancel":  params["cancel"]
+		});
+	}
+
 	window.jsbridge = {
 		syncSendToNative		: syncSendToNative,
 		sendToNative 			: sendToNative,
@@ -90,7 +105,8 @@
 		getUserInfo				: getUserInfo,
 		closeHtmlPage			: closeHtmlPage,
 		canGoBack				: canGoBack,
-		takePhoto				: takePhoto
+		takePhoto				: takePhoto,
+		pickPhotos				: pickPhotos
 	};
 
 })();
