@@ -5,11 +5,14 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.net.http.SslError
+import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.net.toUri
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,6 +45,14 @@ class WebViewActivity : AppCompatActivity(), WebViewHost {
 
         /** WebView 可自行加载的网页协议；其余 scheme 视为外部 App 协议 */
         private val WEB_SCHEMES = setOf("http", "https", "file", "about", "blob", "data")
+
+        /** 内网私有网段（RFC1918）与 loopback：证书校验放行范围 */
+        private val PRIVATE_HOSTS = listOf<(String) -> Boolean>(
+            { it == "localhost" || it == "127.0.0.1" || it == "::1" },
+            { Regex("^10\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})$").matches(it) },
+            { Regex("^192\\.168\\.(\\d{1,3})\\.(\\d{1,3})$").matches(it) },
+            { Regex("^172\\.(1[6-9]|2\\d|3[01])\\.(\\d{1,3})\\.(\\d{1,3})$").matches(it) }
+        )
 
         fun start(context: android.content.Context, url: String? = null) {
             val intent = Intent(context, WebViewActivity::class.java)
@@ -131,6 +142,21 @@ class WebViewActivity : AppCompatActivity(), WebViewHost {
                     true
                 } catch (e: android.content.ActivityNotFoundException) {
                     true // 无 App 可处理：吞掉导航，保留当前页面
+                }
+            }
+            override fun onReceivedSslError(
+                view: WebView?,
+                handler: SslErrorHandler,
+                error: SslError?
+            ) {
+                // 内网私有部署站点（如 10.x 网段 gui 服务）常用过期/自签证书，
+                // 系统默认 cancel 直接 ERR_CERT_AUTHORITY_INVALID。
+                // 策略：私有网段地址放行，其余仍拒绝。
+                val host = view?.url?.toUri()?.host ?: ""
+                if (PRIVATE_HOSTS.any { it(host) }) {
+                    handler.proceed()
+                } else {
+                    handler.cancel()
                 }
             }
         }
