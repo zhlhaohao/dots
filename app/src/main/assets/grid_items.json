@@ -1,11 +1,11 @@
 [
   {"title": "JSBridge 演示", "url": "file:///android_asset/webpage/jsbridge_demo.html"},
-  {"title": "Example", "url": "https://example.com"},
-  {"title": "GitHub", "url": "https://github.com"},
-  {"title": "Android", "url": "https://developer.android.com"},
   {"title": "MDN", "url": "https://developer.mozilla.org"},
   {"title": "百度", "url": "https://www.baidu.com"},
   {"title": "gui-0", "url": "https://10.119.80.105:7860"},
-  {"title": "", "url": ""},
-  {"title": "", "url": ""}
+  {"title": "gui-1", "url": "https://10.119.80.105:7861"},
+  {"title": "gui-2", "url": "https://10.119.80.105:7862"},
+  {"title": "gui-3", "url": "https://10.119.80.105:7863"},
+  {"title": "邮件库", "url": "https://10.119.80.105:27866"},
+  {"title": "Doclens", "url": "https://10.119.80.105:28000"}
 ]
