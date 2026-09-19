@@ -114,6 +114,15 @@
 		});
 	}
 
+	//downloadFile: OkHttp stream download to system Downloads dir + notification
+	function downloadFile(params) {
+		sendToNative("downloadFile", {
+			downloadUrl : params.downloadUrl || "",
+			fileName    : params.fileName || "",
+			cookieName  : params.cookieName || "cortex_auth"
+		}, params.success, params.fail);
+	}
+
 	window.jsbridge = {
 		syncSendToNative		: syncSendToNative,
 		sendToNative 			: sendToNative,
@@ -124,7 +133,8 @@
 		canGoBack				: canGoBack,
 		takePhoto				: takePhoto,
 		pickPhotos				: pickPhotos,
-		pickAndUploadFiles		: pickAndUploadFiles
+		pickAndUploadFiles		: pickAndUploadFiles,
+		downloadFile			: downloadFile
 	};
 
 })();

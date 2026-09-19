@@ -29,6 +29,7 @@ import com.lianghao.myapp.jsbridge.plugin.JsGetUserInfo
 import com.lianghao.myapp.jsbridge.plugin.JsTakePhoto
 import com.lianghao.myapp.jsbridge.plugin.JsPickPhotos
 import com.lianghao.myapp.jsbridge.plugin.JsPickAndUploadFiles
+import com.lianghao.myapp.jsbridge.plugin.JsDownloadFile
 
 /**
  * JSBridge 宿主页面：承载系统 WebView，注册 JS 插件并加载 URL。
@@ -177,6 +178,7 @@ class WebViewActivity : AppCompatActivity(), WebViewHost {
         jsBridge.registerJSPlugin("takePhoto", JsTakePhoto())
         jsBridge.registerJSPlugin("pickPhotos", JsPickPhotos())
         jsBridge.registerJSPlugin("pickAndUploadFiles", JsPickAndUploadFiles())
+        jsBridge.registerJSPlugin("downloadFile", JsDownloadFile())
     }
 
     override fun onBackPressed() {

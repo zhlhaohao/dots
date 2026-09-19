@@ -22,6 +22,19 @@
         });
     }
 
+    function doDownloadFile() {
+        window.jsbridge.downloadFile({
+            downloadUrl: "https://10.119.80.105:7862/api/preview/download?path=docs/upload_test.txt",
+            fileName: "downloaded_test.txt",
+            success: function(res) {
+                show("downloadFile: " + JSON.stringify(res).substring(0,400));
+            },
+            fail: function(err) {
+                show("downloadFile fail: " + JSON.stringify(err).substring(0,400));
+            }
+        });
+    }
+
 </script>
     <title>JSBridge 接口测试（sample 移植版）</title>
     <style>
@@ -55,6 +68,7 @@
     <input type="button" value="拍照(异步,base64回传)" onclick="doTakePhoto();"/>
         <input type="button" value="相册选图(异步,base64数组回传)" onclick="doPickPhotos();"/>
         <input type="button" value="选文件上传(multipart,聚合回调)" onclick="doPickAndUploadFiles();"/>
+        <input type="button" value="下载文件(到Downloads+通知)" onclick="doDownloadFile();"/>
 </p>
 <p>
     <img id="photoPreview" style="max-width:100%;display:none;"/>
