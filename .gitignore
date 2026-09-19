@@ -11,3 +11,5 @@
 .cxx
 local.properties
 /.cortex
+/app/libs
+/app/src/stubs
