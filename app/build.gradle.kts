@@ -15,6 +15,14 @@ android {
         versionName = "1.0"
     }
 
+    // 发行版 APK 命名：Dots-v<versionName>.apk（debug 同样生效）
+    applicationVariants.all {
+        outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            outputImpl.outputFileName = "Dots-v${versionName}.apk"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
