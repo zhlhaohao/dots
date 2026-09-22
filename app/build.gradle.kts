@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -27,6 +29,20 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // 签名信息在 local.properties（gitignored），缺失时回退为未签名构建
+            val props = rootProject.file("local.properties")
+            if (props.exists()) {
+                val lp = Properties().apply { props.inputStream().use { load(it) } }
+                val storeFile = lp.getProperty("DOTS_STORE_FILE")
+                if (storeFile != null) {
+                    signingConfig = signingConfigs.create("dotsRelease") {
+                        this.storeFile = rootProject.file(storeFile)
+                        this.storePassword = lp.getProperty("DOTS_STORE_PASSWORD")
+                        this.keyAlias = lp.getProperty("DOTS_KEY_ALIAS")
+                        this.keyPassword = lp.getProperty("DOTS_KEY_PASSWORD")
+                    }
+                }
+            }
         }
     }
     compileOptions {
