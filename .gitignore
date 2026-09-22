@@ -13,3 +13,7 @@ local.properties
 /.cortex
 /app/libs
 /app/src/stubs
+# doclens 本地状态（索引/会话/密钥），不随知识库同步
+.doclens/
+# planify 框架目录（LLM trace 含对话全文），不随知识库同步
+.planify/
