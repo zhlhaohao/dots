@@ -1,4 +1,4 @@
-package com.lianghao.myapp.jsbridge;
+package com.lianghao.dots.jsbridge;
 
 /**
  * 宿主接口：插件通过它访问承载 WebView 的 Activity 能力。

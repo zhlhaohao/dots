@@ -1,4 +1,4 @@
-package com.lianghao.myapp.jsbridge;
+package com.lianghao.dots.jsbridge;
 
 import android.app.Activity;
 import android.content.Context;

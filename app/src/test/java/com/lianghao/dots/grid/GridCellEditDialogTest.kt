@@ -1,4 +1,4 @@
-package com.lianghao.myapp.grid
+package com.lianghao.dots.grid
 
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

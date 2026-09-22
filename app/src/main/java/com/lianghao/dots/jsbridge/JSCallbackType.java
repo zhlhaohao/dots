@@ -1,4 +1,4 @@
-package com.lianghao.myapp.jsbridge;
+package com.lianghao.dots.jsbridge;
 
 /**
  * 异步通道四态回调。自 ../news 移植。

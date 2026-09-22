@@ -1,4 +1,4 @@
-package com.lianghao.myapp.grid
+package com.lianghao.dots.grid
 
 import android.content.Context
 import java.io.File

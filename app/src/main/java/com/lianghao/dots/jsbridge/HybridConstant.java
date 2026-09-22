@@ -1,4 +1,4 @@
-package com.lianghao.myapp.jsbridge;
+package com.lianghao.dots.jsbridge;
 
 /**
  * JSBridge 框架常量。自 ../news（com.tencent.tbs.jsbridge）移植。

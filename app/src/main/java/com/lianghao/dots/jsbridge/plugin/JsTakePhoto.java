@@ -1,4 +1,4 @@
-package com.lianghao.myapp.jsbridge.plugin;
+package com.lianghao.dots.jsbridge.plugin;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
 
-import com.lianghao.myapp.jsbridge.BaseJSPlugin;
+import com.lianghao.dots.jsbridge.BaseJSPlugin;
 
 import org.json.JSONObject;
 
@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
  *   （ActivityResult API 通道，本仓宿主未引入 EasyPermissions）；
  * - 拉起相机由 activity.startActivityForResult 改为宿主
  *   WebViewHost.startPluginActivityForResult（本仓宿主用 ActivityResult API）；
- * - FileProvider authorities 改 com.lianghao.myapp.fileprovider。
+ * - FileProvider authorities 改 com.lianghao.dots.fileprovider。
  *
  * @author lianghao
  * @date 2026/8/20
@@ -51,7 +51,7 @@ public class JsTakePhoto extends BaseJSPlugin {
 	private static final int REQUEST_TAKE_PHOTO_PERMISSION = 0x0019;
 
 	/** 本仓 FileProvider authorities（news 侧为 com.chaychan.news.fileprovider） */
-	private static final String PROVIDER_AUTHORITIES = "com.lianghao.myapp.fileprovider";
+	private static final String PROVIDER_AUTHORITIES = "com.lianghao.dots.fileprovider";
 	private static final String PHOTO_DIR_NAME = "jsbridge_photo";
 
 	private static final int DEFAULT_QUALITY = 70;

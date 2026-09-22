@@ -1,4 +1,4 @@
-package com.lianghao.myapp.jsbridge.plugin;
+package com.lianghao.dots.jsbridge.plugin;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,7 +13,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.webkit.CookieManager;
 
-import com.lianghao.myapp.jsbridge.BaseJSPlugin;
+import com.lianghao.dots.jsbridge.BaseJSPlugin;
 
 import org.json.JSONObject;
 

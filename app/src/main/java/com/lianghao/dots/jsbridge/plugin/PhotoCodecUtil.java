@@ -1,4 +1,4 @@
-package com.lianghao.myapp.jsbridge.plugin;
+package com.lianghao.dots.jsbridge.plugin;
 
 import android.graphics.Bitmap;
 import android.util.Base64;

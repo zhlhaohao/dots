@@ -1,4 +1,4 @@
-package com.lianghao.myapp.grid
+package com.lianghao.dots.grid
 
 import android.view.GestureDetector
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.lianghao.myapp.R
+import com.lianghao.dots.R
 
 /**
  * 九宫格适配器：非空格子 = 首字母色块 + 标题；空格子 = 灰显占位、不响应单击。

@@ -1,4 +1,4 @@
-package com.lianghao.myapp.grid
+package com.lianghao.dots.grid
 
 import org.json.JSONObject
 import org.junit.Assert.assertEquals

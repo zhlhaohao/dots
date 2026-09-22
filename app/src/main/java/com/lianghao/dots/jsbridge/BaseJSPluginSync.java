@@ -1,4 +1,4 @@
-package com.lianghao.myapp.jsbridge;
+package com.lianghao.dots.jsbridge;
 
 /**
  * 同步插件基类。自 ../news 移植。

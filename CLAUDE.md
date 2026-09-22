@@ -26,8 +26,8 @@
 
 JSBridge 框架及插件**事实来源是 ../news 仓库**（`C:\Users\lianghao\github\news`，纯 Java + X5 WebView 项目）。移植与后续同步须遵守：
 
-- **源码对应关系**：本仓 `com.lianghao.myapp.jsbridge.*` ←→ news 仓 `com.tencent.tbs.jsbridge.*`；宿主 `WebViewActivity` ←→ news `BaseWebViewActivity`（其 `registerJSApi()` 约 252-271 行是插件注册事实来源）。
-- **本仓已做的适配**（向 news 回移或对照时注意差异）：① WebView 由 X5 `com.tencent.smtt.sdk.WebView` 改为系统 `android.webkit.WebView`；② 宿主依赖由 `BaseWebViewActivity` 具体类改为 `WebViewHost` 接口；③ `JSBridge` 移除了 X5 专属直暴露接口（`openDebugX5`/`openWebkit`/zxing `openQRCodeScan`），新增 `hybrid(callbackId)` 空实现兜底；④ 插件状态内聚（如 `JsCanGoBack` 的 allowClose 收进插件，news 版是宿主 public 字段）；⑤ **`jsbridge.js` 的 `callBackFromNative` 已修复 news 潜伏 bug**（空 params 时 `JSON.parse(undefined)` 抛异常丢回调，兜底为 `{}`）——news 侧同款文件未修，回移时勿覆盖本仓版本；⑥ **takePhoto 移植适配**（2026-09-17）：权限申请 EasyPermissions → 宿主 `requestRuntimePermissions`（ActivityResult API），拉起相机 `startActivityForResult` → 宿主 `startPluginActivityForResult`，FileProvider authorities 用本仓 `com.lianghao.myapp.fileprovider`；结果码 0x0309 / 权限码 0x0019 与 news 对齐；接口契约（参数/错误码/cancel 态）与 news `docs/camera_bridge.md` 完全一致。
+- **源码对应关系**：本仓 `com.lianghao.dots.jsbridge.*` ←→ news 仓 `com.tencent.tbs.jsbridge.*`；宿主 `WebViewActivity` ←→ news `BaseWebViewActivity`（其 `registerJSApi()` 约 252-271 行是插件注册事实来源）。
+- **本仓已做的适配**（向 news 回移或对照时注意差异）：① WebView 由 X5 `com.tencent.smtt.sdk.WebView` 改为系统 `android.webkit.WebView`；② 宿主依赖由 `BaseWebViewActivity` 具体类改为 `WebViewHost` 接口；③ `JSBridge` 移除了 X5 专属直暴露接口（`openDebugX5`/`openWebkit`/zxing `openQRCodeScan`），新增 `hybrid(callbackId)` 空实现兜底；④ 插件状态内聚（如 `JsCanGoBack` 的 allowClose 收进插件，news 版是宿主 public 字段）；⑤ **`jsbridge.js` 的 `callBackFromNative` 已修复 news 潜伏 bug**（空 params 时 `JSON.parse(undefined)` 抛异常丢回调，兜底为 `{}`）——news 侧同款文件未修，回移时勿覆盖本仓版本；⑥ **takePhoto 移植适配**（2026-09-17）：权限申请 EasyPermissions → 宿主 `requestRuntimePermissions`（ActivityResult API），拉起相机 `startActivityForResult` → 宿主 `startPluginActivityForResult`，FileProvider authorities 用本仓 `com.lianghao.dots.fileprovider`；结果码 0x0309 / 权限码 0x0019 与 news 对齐；接口契约（参数/错误码/cancel 态）与 news `docs/camera_bridge.md` 完全一致。
 - **未移植的插件**（news 共 18 个注册插件，本仓已移 5 个）：其余 13 个依赖 zxing/EasyPermissions/FileProvider/CacheWebView 等宿主设施，移植时按需引入（FileProvider 本仓已随 takePhoto 引入）；`pickAndUploadFiles` 在 news 侧本身未实现（仅契约冻结）。完整清单见 news `docs/jsbridge-dev-guide.md` §2。
 - **文档同步**：news 侧 `docs/jsbridge-dev-guide.md` 是接口契约的权威文档（含硬约束、调用时序、调试对照表）；本仓 `docs/web/jsbridge.js` 未维护副本，以本仓 `assets/webpage/jsbridge.js` 为准，与 news 版差异见上一条 ⑤。
 - **UA/演示页**：UA 标识两仓共用 `NexBox/1.0`（决策见 docs/adr/0001）；H5 环境检测、`jsbridge.js` 引用方式与 news §6 完全一致，同一页面可无差别跑在两仓 App 内。
@@ -45,11 +45,12 @@ JSBridge 框架及插件**事实来源是 ../news 仓库**（`C:\Users\lianghao\
 ```bash
 export JAVA_HOME="C:\\Program Files\\Android\\Android Studio\\jre"
 ./gradlew assembleDebug
-# 产物: app/build/outputs/apk/debug/app-debug.apk
+# 产物: app/build/outputs/apk/debug/Dots-v1.0.apk
 ```
 
 - SDK 路径已写入 `local.properties`（`C:/Users/lianghao/AppData/Local/Android/Sdk`）
 - AGP 7 必须在 `app/build.gradle.kts` 中声明 `namespace`（Manifest 中不再写 package 属性）
+- **包名**：`com.lianghao.dots`（2026-09-22 由 `com.lianghao.myapp` 改名；FileProvider authority 同步改为 `com.lianghao.dots.fileprovider`；App 名 Dots，APK 命名 `Dots-v<version>.apk`，debug/release 共用 `keystores/dots-release.jks` 签名，签名信息在 local.properties）
 
 ## 模拟器测试
 
@@ -58,10 +59,10 @@ export JAVA_HOME="C:\\Program Files\\Android\\Android Studio\\jre"
 ```bash
 SDK=/c/Users/lianghao/AppData/Local/Android/Sdk
 $SDK/emulator/emulator.exe -avd Pixel_3a_API_35_extension_level_13_x86_64
-$SDK/platform-tools/adb.exe install -r app/build/outputs/apk/debug/app-debug.apk
-$SDK/platform-tools/adb.exe shell am start -n com.lianghao.myapp/.SplashActivity
+$SDK/platform-tools/adb.exe install -r app/build/outputs/apk/debug/Dots-v1.0.apk
+$SDK/platform-tools/adb.exe shell am start -n com.lianghao.dots/.SplashActivity
 # 验证前台 Activity: adb shell dumpsys activity activities | grep topResumedActivity
-# 注意包名是 com.lianghao.myapp；DashboardActivity 未导出，只能从 SplashActivity 进入
+# 注意包名是 com.lianghao.dots；DashboardActivity 未导出，只能从 SplashActivity 进入
 ```
 
 注意：Git Bash 会把 `/sdcard` 误转为本地路径，adb shell 内的设备路径需用 `//sdcard` 或禁用路径转换（`MSYS_NO_PATHCONV=1`）。
@@ -71,7 +72,7 @@ $SDK/platform-tools/adb.exe shell am start -n com.lianghao.myapp/.SplashActivity
 ### JSBridge 演示页装机验证（已实测通过 2026-09-16）
 
 ```bash
-$SDK/platform-tools/adb.exe shell am start -n com.lianghao.myapp/.SplashActivity
+$SDK/platform-tools/adb.exe shell am start -n com.lianghao.dots/.SplashActivity
 # Dashboard → 点「打开 JSBridge 演示页」；演示页路径 file:///android_asset/webpage/jsbridge_demo.html
 $SDK/platform-tools/adb.exe logcat -s JsGetUserInfo:I JsGetScreenInfo:I JsCloseHtmlPage:I JsCanGoBack:I
 ```
@@ -91,13 +92,13 @@ $SDK/platform-tools/adb.exe logcat -d -s JsTakePhoto:V
 ### 九宫格 Dashboard 装机验证（已实测通过 2026-09-18，工单01–05）
 
 ```bash
-$SDK/platform-tools/adb.exe install -r app/build/outputs/apk/debug/app-debug.apk
-$SDK/platform-tools/adb.exe shell am start -n com.lianghao.myapp/.SplashActivity
+$SDK/platform-tools/adb.exe install -r app/build/outputs/apk/debug/Dots-v1.0.apk
+$SDK/platform-tools/adb.exe shell am start -n com.lianghao.dots/.SplashActivity
 # 单击格1 → WebViewActivity；长按静止松手 → 编辑框；input draganddrop 起拖排序；恢复默认 → 二次确认
-MSYS_NO_PATHCONV=1 $SDK/platform-tools/adb.exe shell "run-as com.lianghao.myapp cat files/grid_items.json"
+MSYS_NO_PATHCONV=1 $SDK/platform-tools/adb.exe shell "run-as com.lianghao.dots cat files/grid_items.json"
 # 重装恢复实测：
 $ADB shell bmgr transport com.android.localtransport/.LocalTransport   # GMS transport 未登录会 Transport error
-$ADB shell bmgr backupnow com.lianghao.myapp && $ADB uninstall com.lianghao.myapp && $ADB install app/build/outputs/apk/debug/app-debug.apk
+$ADB shell bmgr backupnow com.lianghao.dots && $ADB uninstall com.lianghao.dots && $ADB install app/build/outputs/apk/debug/Dots-v1.0.apk
 # 期望: 重装首启 files/grid_items.json 恢复用户配置（KeepMe 实测通过）
 ```
 

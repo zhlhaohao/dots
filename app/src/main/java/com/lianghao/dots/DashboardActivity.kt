@@ -1,14 +1,14 @@
-package com.lianghao.myapp
+package com.lianghao.dots
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.lianghao.myapp.grid.GridAdapter
-import com.lianghao.myapp.grid.GridCellEditDialog
-import com.lianghao.myapp.grid.GridConfigStore
-import com.lianghao.myapp.grid.GridItem
+import com.lianghao.dots.grid.GridAdapter
+import com.lianghao.dots.grid.GridCellEditDialog
+import com.lianghao.dots.grid.GridConfigStore
+import com.lianghao.dots.grid.GridItem
 
 /**
  * 九宫格启动台（术语见 CONTEXT.md）：3×3 格子网，单击非空格子打开其 URL。

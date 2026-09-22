@@ -1,4 +1,4 @@
-package com.lianghao.myapp
+package com.lianghao.dots
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -18,18 +18,18 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.lianghao.myapp.jsbridge.BaseJSPlugin
-import com.lianghao.myapp.jsbridge.HybridConstant
-import com.lianghao.myapp.jsbridge.JSBridge
-import com.lianghao.myapp.jsbridge.WebViewHost
-import com.lianghao.myapp.jsbridge.plugin.JsCanGoBack
-import com.lianghao.myapp.jsbridge.plugin.JsCloseHtmlPage
-import com.lianghao.myapp.jsbridge.plugin.JsGetScreenInfo
-import com.lianghao.myapp.jsbridge.plugin.JsGetUserInfo
-import com.lianghao.myapp.jsbridge.plugin.JsTakePhoto
-import com.lianghao.myapp.jsbridge.plugin.JsPickPhotos
-import com.lianghao.myapp.jsbridge.plugin.JsPickAndUploadFiles
-import com.lianghao.myapp.jsbridge.plugin.JsDownloadFile
+import com.lianghao.dots.jsbridge.BaseJSPlugin
+import com.lianghao.dots.jsbridge.HybridConstant
+import com.lianghao.dots.jsbridge.JSBridge
+import com.lianghao.dots.jsbridge.WebViewHost
+import com.lianghao.dots.jsbridge.plugin.JsCanGoBack
+import com.lianghao.dots.jsbridge.plugin.JsCloseHtmlPage
+import com.lianghao.dots.jsbridge.plugin.JsGetScreenInfo
+import com.lianghao.dots.jsbridge.plugin.JsGetUserInfo
+import com.lianghao.dots.jsbridge.plugin.JsTakePhoto
+import com.lianghao.dots.jsbridge.plugin.JsPickPhotos
+import com.lianghao.dots.jsbridge.plugin.JsPickAndUploadFiles
+import com.lianghao.dots.jsbridge.plugin.JsDownloadFile
 
 /**
  * JSBridge 宿主页面：承载系统 WebView，注册 JS 插件并加载 URL。

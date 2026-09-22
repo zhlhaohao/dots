@@ -1,4 +1,4 @@
-package com.lianghao.myapp.grid
+package com.lianghao.dots.grid
 
 /**
  * 九宫格的格子条目（术语见 CONTEXT.md）。

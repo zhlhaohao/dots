@@ -1,10 +1,10 @@
-package com.lianghao.myapp.grid
+package com.lianghao.dots.grid
 
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import com.lianghao.myapp.R
+import com.lianghao.dots.R
 
 /**
  * 「格子编辑」对话框：改标题与 URL；两项均留空保存 = 清空为空格子。

@@ -1,4 +1,4 @@
-package com.lianghao.myapp.jsbridge.plugin;
+package com.lianghao.dots.jsbridge.plugin;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.exifinterface.media.ExifInterface;
 
-import com.lianghao.myapp.jsbridge.BaseJSPlugin;
+import com.lianghao.dots.jsbridge.BaseJSPlugin;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package com.lianghao.myapp.jsbridge.plugin;
+package com.lianghao.dots.jsbridge.plugin;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import android.webkit.CookieManager;
 
 import androidx.annotation.Nullable;
 
-import com.lianghao.myapp.jsbridge.BaseJSPlugin;
+import com.lianghao.dots.jsbridge.BaseJSPlugin;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -48,7 +48,7 @@ import okio.Okio;
  *
  * 自 ../news 的 com.tencent.tbs.jsbridge.plugin.JsPickAndUploadFiles 移植。
  * 本仓适配差异（对照 news 版）：
- * - 包名/基类：com.tencent.tbs.jsbridge → com.lianghao.myapp.jsbridge；
+ * - 包名/基类：com.tencent.tbs.jsbridge → com.lianghao.dots.jsbridge；
  * - 拉起选择器由 activity.startActivityForResult 改为宿主
  *   WebViewHost.startPluginActivityForResult，结果经 registerResultCallback
  *   注册转发（本仓宿主用 ActivityResult API）；

@@ -13,7 +13,7 @@
 ├── app/
 │   └── src/main/
 │       ├── AndroidManifest.xml          # SplashActivity 为 LAUNCHER 入口
-│       ├── java/com/example/myapplication/
+│       ├── java/com/lianghao/dots/
 │       │   ├── SplashActivity.kt        # 启动页，1.2s 后跳转 Dashboard
 │       │   └── DashboardActivity.kt     # 主页，居中显示「欢迎访问」
 │       └── res/
@@ -50,7 +50,7 @@ export JAVA_HOME="C:\Program Files\Android\Android Studio\jre"
 SDK=/c/Users/lianghao/AppData/Local/Android/Sdk
 $SDK/emulator/emulator.exe -avd Pixel_3a_API_35_extension_level_13_x86_64
 $SDK/platform-tools/adb.exe install -r app/build/outputs/apk/debug/app-debug.apk
-$SDK/platform-tools/adb.exe shell am start -n com.example.myapplication/.SplashActivity
+$SDK/platform-tools/adb.exe shell am start -n com.lianghao.dots/.SplashActivity
 ```
 
 已实测通过：构建 → 安装 → Splash 自动跳转 Dashboard，正常显示「欢迎访问」。

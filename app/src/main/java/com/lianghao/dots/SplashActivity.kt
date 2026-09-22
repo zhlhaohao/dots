@@ -1,4 +1,4 @@
-package com.lianghao.myapp
+package com.lianghao.dots
 
 import android.content.Intent
 import android.os.Bundle

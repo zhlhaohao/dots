@@ -1,9 +1,9 @@
-package com.lianghao.myapp.jsbridge.plugin;
+package com.lianghao.dots.jsbridge.plugin;
 
 import android.app.Activity;
 import android.util.Log;
 
-import com.lianghao.myapp.jsbridge.BaseJSPluginSync;
+import com.lianghao.dots.jsbridge.BaseJSPluginSync;
 
 import org.json.JSONObject;
 
