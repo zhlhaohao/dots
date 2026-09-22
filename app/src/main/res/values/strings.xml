@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Dots</string>
     <string name="dashboard_title">Dots</string>
-    <string name="welcome_text">欢迎访问</string>
+    <string name="welcome_text">欢迎来到Dots</string>
     <string name="open_jsbridge_demo">打开 JSBridge 演示页</string>
     <string name="webview_title">JSBridge Demo</string>
     <string name="grid_edit_title">编辑格子</string>
