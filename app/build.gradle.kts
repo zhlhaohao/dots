@@ -26,23 +26,30 @@ android {
     }
 
     buildTypes {
+        // 签名信息在 local.properties（gitignored），缺失时回退默认行为
+        // （release 未签名 / debug 用 ~/.android/debug.keystore）
+        val props = rootProject.file("local.properties")
+        var dotsSigning: com.android.build.gradle.internal.dsl.SigningConfig? = null
+        if (props.exists()) {
+            val lp = Properties().apply { props.inputStream().use { load(it) } }
+            val storeFile = lp.getProperty("DOTS_STORE_FILE")
+            if (storeFile != null) {
+                dotsSigning = signingConfigs.create("dotsRelease") {
+                    this.storeFile = rootProject.file(storeFile)
+                    this.storePassword = lp.getProperty("DOTS_STORE_PASSWORD")
+                    this.keyAlias = lp.getProperty("DOTS_KEY_ALIAS")
+                    this.keyPassword = lp.getProperty("DOTS_KEY_PASSWORD")
+                }
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            // 签名信息在 local.properties（gitignored），缺失时回退为未签名构建
-            val props = rootProject.file("local.properties")
-            if (props.exists()) {
-                val lp = Properties().apply { props.inputStream().use { load(it) } }
-                val storeFile = lp.getProperty("DOTS_STORE_FILE")
-                if (storeFile != null) {
-                    signingConfig = signingConfigs.create("dotsRelease") {
-                        this.storeFile = rootProject.file(storeFile)
-                        this.storePassword = lp.getProperty("DOTS_STORE_PASSWORD")
-                        this.keyAlias = lp.getProperty("DOTS_KEY_ALIAS")
-                        this.keyPassword = lp.getProperty("DOTS_KEY_PASSWORD")
-                    }
-                }
-            }
+            dotsSigning?.let { signingConfig = it }
+        }
+        debug {
+            // debug 也用 release keystore 签名：与 release 包互相覆盖安装，免卸载
+            dotsSigning?.let { signingConfig = it }
         }
     }
     compileOptions {
