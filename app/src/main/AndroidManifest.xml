@@ -36,7 +36,7 @@
         <!-- JsTakePhoto 拍照输出：应用私有 cache 目录经 FileProvider 暴露（零存储权限、不污染相册） -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.lianghao.myapp.fileprovider"
+            android:authorities="com.lianghao.dots.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

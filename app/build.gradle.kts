@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.lianghao.myapp"
+    namespace = "com.lianghao.dots"
     compileSdk = 31
 
     defaultConfig {
-        applicationId = "com.lianghao.myapp"
+        applicationId = "com.lianghao.dots"
         minSdk = 23
         targetSdk = 31
         versionCode = 1
