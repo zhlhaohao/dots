@@ -25,12 +25,24 @@ class GridConfigJsonTest {
     }
 
     @Test
-    fun `decode truncates to nine items`() {
-        val json = (1..12).joinToString(",", "[", "]") { """{"title":"t$it","url":"u$it"}""" }
+    fun `decode truncates beyond max items`() {
+        val json = (1..20).joinToString(",", "[", "]") { """{"title":"t$it","url":"u$it"}""" }
 
         val items = GridConfigJson.decodeOrNull(json)!!
 
         assertEquals(GridConfigJson.MAX_ITEMS, items.size)
+        assertEquals("t" + GridConfigJson.MAX_ITEMS, items.last().title)
+    }
+
+    @Test
+    fun `decode accepts nine-item legacy config unchanged`() {
+        // 旧版本上限 9：存量 9 条配置必须原样生效（ADR-0003 安全升格）
+        val json = (1..9).joinToString(",", "[", "]") { """{"title":"t$it","url":"u$it"}""" }
+
+        val items = GridConfigJson.decodeOrNull(json)!!
+
+        assertEquals(9, items.size)
+        assertEquals("t1", items.first().title)
         assertEquals("t9", items.last().title)
     }
 

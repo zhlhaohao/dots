@@ -35,4 +35,28 @@
         android:visibility="gone"
         android:text="@string/grid_edit_url_invalid" />
 
+    <TextView
+        android:id="@+id/tvBlankError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="#D32F2F"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:text="@string/grid_edit_both_blank" />
+
+    <TextView
+        android:id="@+id/btnDeleteCell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:text="@string/grid_edit_delete"
+        android:textColor="#D32F2F"
+        android:textSize="14sp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true" />
+
 </LinearLayout>

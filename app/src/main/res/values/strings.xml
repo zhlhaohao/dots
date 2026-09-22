@@ -6,13 +6,22 @@
     <string name="open_jsbridge_demo">打开 JSBridge 演示页</string>
     <string name="webview_title">JSBridge Demo</string>
     <string name="grid_edit_title">编辑格子</string>
+    <string name="grid_new_title">新建格子</string>
     <string name="grid_edit_save">保存</string>
     <string name="grid_edit_cancel">取消</string>
     <string name="grid_edit_title_hint">标题</string>
-    <string name="grid_edit_url_hint">URL（留空且标题留空 = 空格子）</string>
+    <string name="grid_edit_url_hint">URL（http://、https:// 或 file://）</string>
     <string name="grid_edit_url_invalid">URL 需以 http://、https:// 或 file:// 开头且不含空格</string>
+    <string name="grid_edit_both_blank">标题与 URL 不能同时为空；清空格子请用「删除此格子」</string>
+    <string name="grid_edit_delete">删除此格子</string>
+    <string name="grid_delete_confirm_title">删除格子？</string>
+    <string name="grid_delete_confirm_message">「%1$s」将被清除为空格子，其他格子位置不变。此操作不可撤销。</string>
+    <string name="grid_delete_confirm_yes">删除</string>
+    <string name="grid_deleted_toast">已删除「%1$s」，其他格子位置不变</string>
+    <string name="grid_full_prompt">格子网已满（最多 20 个），请先删除部分格子</string>
+    <string name="grid_blank_longpress_hint">长按空白处添加格子</string>
     <string name="grid_edit_restore">恢复默认…</string>
     <string name="grid_restore_confirm_title">恢复默认？</string>
-    <string name="grid_restore_confirm_message">九宫格将回到随包内置的出厂布局，你对全部 9 个格子的修改（含排序）都会被清除。此操作不可撤销。</string>
+    <string name="grid_restore_confirm_message">格子网将回到随包内置的出厂布局，你对全部格子的修改（含排序）都会被清除。此操作不可撤销。</string>
     <string name="grid_restore_confirm_yes">恢复</string>
 </resources>

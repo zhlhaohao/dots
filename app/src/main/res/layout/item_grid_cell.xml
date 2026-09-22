@@ -1,47 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginTop="14dp"
+    android:layout_marginBottom="14dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true">
 
-    <LinearLayout
+    <!-- 4 列后格子内宽随设备密度低至 ~42dp：色块改按百分比缩放（上限 48dp），
+         固定 48dp 在高密度窄格上会溢出被裁成直边（2026-09-22 真机反馈）。 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cellBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="2dp">
 
         <TextView
             android:id="@+id/tvBadge"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:gravity="center"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="#FFFFFF"
             android:background="@drawable/bg_grid_badge"
-            tools:ignore="HardcodedText"
-            xmlns:tools="http://schemas.android.com/tools" />
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintWidth_max="48dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/tvCellTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:gravity="center"
-            android:maxLines="1"
+            android:maxLines="2"
             android:ellipsize="end"
             android:textSize="13sp"
+            android:lineSpacingExtra="1dp"
             android:textColor="#DE000000"
-            xmlns:tools="http://schemas.android.com/tools"
+            app:layout_constraintTop_toBottomOf="@id/tvBadge"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="标题" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

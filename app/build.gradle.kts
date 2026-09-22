@@ -13,8 +13,8 @@ android {
         applicationId = "com.lianghao.dots"
         minSdk = 23
         targetSdk = 31
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
 
     // 发行版 APK 命名：Dots-v<versionName>.apk（debug 同样生效）
