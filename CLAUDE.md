@@ -11,7 +11,7 @@
   - `WebViewActivity.kt` — JSBridge 宿主：系统 WebView + 注册插件 + 加载 URL（缺省加载内置演示页）
 - `app/src/main/java/com/lianghao/myapp/jsbridge/` — JSBridge 核心框架（Java，自 ../news 的 com.tencent.tbs.jsbridge 移植，WebView 由 X5 改为系统 android.webkit.WebView，宿主依赖抽象为 `WebViewHost` 接口）
   - `JSBridge.java`（分发器，注入对象名 `Android`）/ `BaseJSPlugin.java`（异步基类）/ `BaseJSPluginSync.java`（同步基类）/ `JSCallbackType.java`（四态）/ `HybridConstant.java` / `WebViewHost.java`（宿主接口：含 `startPluginActivityForResult`/`requestRuntimePermissions`，为本仓新增）
-  - `plugin/` — 插件目录。现有 5 个插件：`JsGetScreenInfo`（同步）、`JsGetUserInfo`（异步，测试数据勿用于生产）、`JsCloseHtmlPage`（同步）、`JsCanGoBack`（异步，控制返回键关页）、`JsTakePhoto`（异步，拍照压缩 base64 回传）+ `PhotoCodecUtil`（图片压缩工具类）
+  - `plugin/` — 插件目录。现有 9 个插件：`JsGetScreenInfo`（同步）、`JsGetUserInfo`（异步，测试数据勿用于生产）、`JsCloseHtmlPage`（同步）、`JsCanGoBack`（异步，控制返回键关页）、`JsOpenHtmlPage`（同步，启动新一层 WebViewActivity）、`JsTakePhoto`（异步，拍照压缩 base64 回传）、`JsPickPhotos`（异步，相册多选 base64 数组）、`JsPickAndUploadFiles`（异步，多选文件 multipart 上传）、`JsDownloadFile`（异步，OkHttp 流式下载到 Downloads）+ `PhotoCodecUtil`（图片压缩工具类）+ `IntranetTrust`（内网自签名证书 trust-all）
 - `app/src/main/assets/webpage/` — `jsbridge.js`（ES5 IIFE，注入 `window.jsbridge`）+ `jsbridge_demo.html`（演示页）
 - `app/src/main/res/` — 布局/主题（Theme.MyApp / Theme.MyApp.Splash）/字符串/图标（mipmap-anydpi-v26 + PNG 密度图）
 
@@ -27,8 +27,8 @@
 JSBridge 框架及插件**事实来源是 ../news 仓库**（`C:\Users\lianghao\github\news`，纯 Java + X5 WebView 项目）。移植与后续同步须遵守：
 
 - **源码对应关系**：本仓 `com.lianghao.dots.jsbridge.*` ←→ news 仓 `com.tencent.tbs.jsbridge.*`；宿主 `WebViewActivity` ←→ news `BaseWebViewActivity`（其 `registerJSApi()` 约 252-271 行是插件注册事实来源）。
-- **本仓已做的适配**（向 news 回移或对照时注意差异）：① WebView 由 X5 `com.tencent.smtt.sdk.WebView` 改为系统 `android.webkit.WebView`；② 宿主依赖由 `BaseWebViewActivity` 具体类改为 `WebViewHost` 接口；③ `JSBridge` 移除了 X5 专属直暴露接口（`openDebugX5`/`openWebkit`/zxing `openQRCodeScan`），新增 `hybrid(callbackId)` 空实现兜底；④ 插件状态内聚（如 `JsCanGoBack` 的 allowClose 收进插件，news 版是宿主 public 字段）；⑤ **`jsbridge.js` 的 `callBackFromNative` 已修复 news 潜伏 bug**（空 params 时 `JSON.parse(undefined)` 抛异常丢回调，兜底为 `{}`）——news 侧同款文件未修，回移时勿覆盖本仓版本；⑥ **takePhoto 移植适配**（2026-09-17）：权限申请 EasyPermissions → 宿主 `requestRuntimePermissions`（ActivityResult API），拉起相机 `startActivityForResult` → 宿主 `startPluginActivityForResult`，FileProvider authorities 用本仓 `com.lianghao.dots.fileprovider`；结果码 0x0309 / 权限码 0x0019 与 news 对齐；接口契约（参数/错误码/cancel 态）与 news `docs/camera_bridge.md` 完全一致。
-- **未移植的插件**（news 共 18 个注册插件，本仓已移 5 个）：其余 13 个依赖 zxing/EasyPermissions/FileProvider/CacheWebView 等宿主设施，移植时按需引入（FileProvider 本仓已随 takePhoto 引入）；`pickAndUploadFiles` 在 news 侧本身未实现（仅契约冻结）。完整清单见 news `docs/jsbridge-dev-guide.md` §2。
+- **本仓已做的适配**（向 news 回移或对照时注意差异）：① WebView 由 X5 `com.tencent.smtt.sdk.WebView` 改为系统 `android.webkit.WebView`；② 宿主依赖由 `BaseWebViewActivity` 具体类改为 `WebViewHost` 接口；③ `JSBridge` 移除了 X5 专属直暴露接口（`openDebugX5`/`openWebkit`/zxing `openQRCodeScan`），新增 `hybrid(callbackId)` 空实现兜底；④ 插件状态内聚（如 `JsCanGoBack` 的 allowClose 收进插件，news 版是宿主 public 字段）；⑤ **`jsbridge.js` 的 `callBackFromNative` 已修复 news 潜伏 bug**（空 params 时 `JSON.parse(undefined)` 抛异常丢回调，兜底为 `{}`）——news 侧同款文件未修，回移时勿覆盖本仓版本；⑥ **takePhoto 移植适配**（2026-09-17）：权限申请 EasyPermissions → 宿主 `requestRuntimePermissions`（ActivityResult API），拉起相机 `startActivityForResult` → 宿主 `startPluginActivityForResult`，FileProvider authorities 用本仓 `com.lianghao.dots.fileprovider`；结果码 0x0309 / 权限码 0x0019 与 news 对齐；接口契约（参数/错误码/cancel 态）与 news `docs/camera_bridge.md` 完全一致。⑦ **openHtmlPage 多层栈实现差异**（2026-09-23）：本仓 `JsOpenHtmlPage` 启动**当前 Activity**（`WebViewActivity`，与 Dashboard 单击格子走同一入口），news 侧启动独立 `PureX5WebViewActivity` + `singleTask`+`taskAffinity=:pure_x5_task`+返回键 `moveTaskToBack`。本仓选择 standard launchMode + 返回键直接 finish，行为是"九宫格 → 第一层 → 第二层 → … → 返回键逐层回退到九宫格"，栈深度由系统 Activity 任务栈托管，无独立 taskAffinity；JS 调用参数 `EXTRA_URL` 与 Dashboard 入口统一。⑧ **导航策略有意分叉**（2026-09-23，见 ADR-0004）：http/https 主框架导航本仓 `shouldOverrideUrlLoading` **开新层**，news 侧为 `return false` 层内加载；属有意分叉，勿按 news 改回。
+- **未移植的插件**（news 共 18 个注册插件，本仓已移 9 个）：其余 9 个依赖 zxing/EasyPermissions/系统 GPS/锁屏方向等宿主设施，移植时按需引入。完整清单见 news `docs/jsbridge-dev-guide.md` §2。
 - **文档同步**：news 侧 `docs/jsbridge-dev-guide.md` 是接口契约的权威文档（含硬约束、调用时序、调试对照表）；本仓 `docs/web/jsbridge.js` 未维护副本，以本仓 `assets/webpage/jsbridge.js` 为准，与 news 版差异见上一条 ⑤。
 - **UA/演示页**：UA 标识两仓共用 `NexBox/1.0`（决策见 docs/adr/0001）；H5 环境检测、`jsbridge.js` 引用方式与 news §6 完全一致，同一页面可无差别跑在两仓 App 内。
 
@@ -77,7 +77,32 @@ $SDK/platform-tools/adb.exe shell am start -n com.lianghao.dots/.SplashActivity
 $SDK/platform-tools/adb.exe logcat -s JsGetUserInfo:I JsGetScreenInfo:I JsCloseHtmlPage:I JsCanGoBack:I
 ```
 
-验证点：同步通道（getScreenInfo 返回 JSON 字符串）、异步通道（getUserInfo success 回调）、fail 兜底（调用未注册函数）、closeHtmlPage 关页、canGoBack=false 时返回键拦截页面不关闭。已知环境坑：模拟器冷进程**首次**进入 WebViewActivity 可能因 chromium 初始化阻塞主线程 >5s 触发一次 ANR（非代码问题），force-stop 重开后正常。
+验证点：同步通道（getScreenInfo 返回 JSON 字符串）、异步通道（getUserInfo success 回调）、fail 兜底（调用未注册函数）、closeHtmlPage 关页、canGoBack=false 时返回键拦截页面不关闭。
+
+### openHtmlPage 多层 WebView 验证（已实测通过 2026-09-23，ADR-0004）
+
+```bash
+$SDK/platform-tools/adb.exe logcat -s JsOpenHtmlPage:I
+# 路径：九宫格 → 第一层演示页 → 点「打开新一层 WebView(同步 openHtmlPage)」→ 第二层演示页
+# 验证返回键逐层回退（点几次开几层，返回键一下退一层，最终回到九宫格）
+# 验证 <a href> 自然导航：主框架 http/https 链接由 shouldOverrideUrlLoading 自动开新层（无需调 openHtmlPage）
+```
+
+验证点：JS 主动调 `jsbridge.openHtmlPage({url})` → 原生日志 `JsOpenHtmlPage: open url: ...` → Activity 栈叠加新一层 WebViewActivity → 返回键按开层顺序逆序 finish 回到 Dashboard。已知环境坑：注入 JS 调试可用 `adb forward tcp:9222 localabstract:webview_devtools_remote_<pid>` + chrome devtools protocol 的 `Runtime.evaluate`（pid 取自 `adb shell cat /proc/net/unix | grep webview_devtools_remote_ | grep -v Zygote`）。
+
+### 分层导航装机验证（已实测通过 2026-09-23，ADR-0004）
+
+```bash
+$ADB install -r app/build/outputs/apk/debug/Dots-v1.1.apk   # 注意：包名 com.lianghao.dots，APK 已升 v1.1
+# 验证路径（CDP 注入替代手点，见上一节环境坑）：
+#  1. Dashboard 点演示页格 → 第一层（Hist #1）
+#  2. CDP: jsbridge.openHtmlPage({url:'file://...演示页'}) → 第二层（#2），日志 JsOpenHtmlPage: open url
+#  3. CDP: jsbridge.openHtmlPage({url:'https://example.com'}) → 第三层（#3）
+#  4. CDP 注入 <a href="https://example.org"> 并 click → 第四层（#4）——自然导航自动开层
+#  5. 返回键连按：逐层 finish（#4→#3→#2→#1→Dashboard），栈序 hist 数可见每按一次少一层
+```
+
+已验证：`openHtmlPage` 开层（file/https 均可）→ `<a>` 自然导航 http 自动开新层（无需 JS 参与）→ 返回键逐层回父页面直至 Dashboard → 多层栈下 `canGoBack=false` 拦截仍生效（误触「禁止返回键关页」按钮后该层按返回不退，恢复 canGoBack=true 后正常退层）。**实测发现的注意点**：演示页按钮排布密集，`input tap` 坐标必须先截图核对（本次 y=1360 误触禁止按钮，导致第一层返回键"失灵"假象）；CDP `Runtime.evaluate` 是替代手点的可靠通道，`jsbridge.openHtmlPage` 同步返回 `{"code":"success"}` 可直接断言。
 
 ### takePhoto 装机验证（已实测通过 2026-09-17）
 

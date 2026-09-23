@@ -54,6 +54,7 @@
 </p>
 <p>
     <input type="button" value="关闭本页面(同步)" onclick="doCloseHtmlPage();"/>
+    <input type="button" value="打开新一层 WebView(同步 openHtmlPage)" onclick="doOpenHtmlPage();"/>
 </p>
 <p>
     <input type="button" value="调用不存在的接口(异步,fail兜底)" onclick="doCallMissing();"/>
@@ -100,6 +101,13 @@
     function doCloseHtmlPage() {
         var raw = jsbridge.closeHtmlPage();
         show("closeHtmlPage (sync): " + raw);
+    }
+
+    // 同步通道：JS 主动打开新一层 WebViewActivity 加载 URL（不依赖 <a href> 自然导航）
+    function doOpenHtmlPage() {
+        // 跳到自身（即再叠一层演示页），验证多层栈
+        var raw = jsbridge.openHtmlPage({ url: "file:///android_asset/webpage/jsbridge_demo.html" });
+        show("openHtmlPage (sync): " + raw);
     }
 
     // 未注册的函数名 → 原生 dispatchJSRequest 找不到插件 → 回调 fail（框架兜底验证）

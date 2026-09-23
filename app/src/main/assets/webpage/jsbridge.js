@@ -59,6 +59,12 @@
 		return syncSendToNative("closeHtmlPage", {});
 	}
 
+	//同步：在当前 WebView 之上启动新一层 WebViewActivity 加载 URL，返回 {code:"success"} 字符串
+	function openHtmlPage(params) {
+		params = params || {};
+		return syncSendToNative("openHtmlPage", { url: params.url || "" });
+	}
+
 	//异步：告知原生返回键是否允许关闭页面（false 时返回键转调页面注册的 success 回调）
 	function canGoBack(allow, onBack) {
 		sendToNative("canGoBack", {
@@ -130,6 +136,7 @@
 		getScreenInfo			: getScreenInfo,
 		getUserInfo				: getUserInfo,
 		closeHtmlPage			: closeHtmlPage,
+		openHtmlPage			: openHtmlPage,
 		canGoBack				: canGoBack,
 		takePhoto				: takePhoto,
 		pickPhotos				: pickPhotos,

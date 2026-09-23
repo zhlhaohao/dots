@@ -30,6 +30,7 @@ import com.lianghao.dots.jsbridge.plugin.JsTakePhoto
 import com.lianghao.dots.jsbridge.plugin.JsPickPhotos
 import com.lianghao.dots.jsbridge.plugin.JsPickAndUploadFiles
 import com.lianghao.dots.jsbridge.plugin.JsDownloadFile
+import com.lianghao.dots.jsbridge.plugin.JsOpenHtmlPage
 
 /**
  * JSBridge 宿主页面：承载系统 WebView，注册 JS 插件并加载 URL。
@@ -128,10 +129,14 @@ class WebViewActivity : AppCompatActivity(), WebViewHost {
 
         webView.webViewClient = object : WebViewClient() {
             /**
-             * 拦截非网页协议导航（如 m 站跳 App 的私有 scheme snssdk143://）。
-             * 放行 http/https/file/about/blob/data，其余尝试唤起外部 App，
-             * 唤不起（无 App 处理）则忽略本次导航，页面留在原地继续渲染。
-             * 不拦截会直接报 ERR_UNKNOWN_URL_SCHEME 并用错误页覆盖已加载内容。
+             * 分层导航策略：
+             * - http/https 主框架导航（点链接、location.href）→ 启动新一层 WebViewActivity 展示，
+             *   返回键逐层回退（九宫格 → 第一层 → 第二层 → …）。
+             * - file/about/blob/data 及 iframe 子框架 → 本 WebView 内加载。
+             * - 其余 scheme（如 m 站跳 App 的 snssdk143://）→ 尝试唤起外部 App，
+             *   唤不起（无 App 处理）则忽略本次导航，页面留在原地继续渲染。
+             *   不拦截会直接报 ERR_UNKNOWN_URL_SCHEME 并用错误页覆盖已加载内容。
+             * 注：宿主 loadUrl 与服务端 30x 重定向不经过本回调，首屏不受影响。
              */
             override fun shouldOverrideUrlLoading(
                 view: WebView,
@@ -139,6 +144,12 @@ class WebViewActivity : AppCompatActivity(), WebViewHost {
             ): Boolean {
                 val url = request.url
                 val scheme = url.scheme?.lowercase() ?: return false
+                if (scheme == "http" || scheme == "https") {
+                    if (request.isForMainFrame) {
+                        WebViewActivity.start(this@WebViewActivity, url.toString()) // 新一层页面
+                    }
+                    return true // 主框架开新层；iframe 子框架导航丢弃（不覆盖当前层）
+                }
                 if (scheme in WEB_SCHEMES) return false // 网页协议：交 WebView 正常加载
                 return try {
                     startActivity(Intent(Intent.ACTION_VIEW, url)) // 私有 scheme：尝试唤起对应 App
@@ -179,6 +190,7 @@ class WebViewActivity : AppCompatActivity(), WebViewHost {
         jsBridge.registerJSPlugin("pickPhotos", JsPickPhotos())
         jsBridge.registerJSPlugin("pickAndUploadFiles", JsPickAndUploadFiles())
         jsBridge.registerJSPlugin("downloadFile", JsDownloadFile())
+        jsBridge.registerJSPlugin("openHtmlPage", JsOpenHtmlPage())
     }
 
     override fun onBackPressed() {
